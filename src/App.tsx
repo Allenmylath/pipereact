@@ -37,7 +37,7 @@ const client = new RTVIClient({
   enableMic: true,
   enableCam: true,
   params: {
-    baseUrl: (import.meta as any).env?.VITE_PIPECAT_API_URL || '/api',
+    baseUrl: import.meta.env.VITE_PIPECAT_API_URL || '/api',
   },
 });
 
