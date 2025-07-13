@@ -20,7 +20,8 @@ import {
   PhoneOff, 
   Send,
   User,
-  Bot
+  Bot,
+  Sparkles
 } from 'lucide-react';
 
 // Types for chat messages
@@ -41,29 +42,56 @@ const client = new PipecatClient({
 // Video Panel Component
 const VideoPanel: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
       {/* Local Video */}
-      <div className="relative bg-gray-800 rounded-lg overflow-hidden aspect-video">
-        <PipecatClientVideo
-          participant="local"
-          fit="cover"
-          mirror={true}
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-          You
+      <div className="group relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+        <div className="relative bg-gray-900/80 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden aspect-video shadow-2xl">
+          <PipecatClientVideo
+            participant="local"
+            fit="cover"
+            mirror={true}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+          <div className="absolute bottom-4 left-4">
+            <div className="flex items-center gap-2 bg-black/50 backdrop-blur-md border border-white/20 px-3 py-2 rounded-full">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-white text-sm font-medium">You</span>
+            </div>
+          </div>
+          <div className="absolute top-4 right-4">
+            <div className="w-8 h-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
+              <User size={16} className="text-white" />
+            </div>
+          </div>
         </div>
       </div>
       
       {/* Bot Video */}
-      <div className="relative bg-gray-800 rounded-lg overflow-hidden aspect-video">
-        <PipecatClientVideo
-          participant="bot"
-          fit="cover"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded text-sm">
-          Bot
+      <div className="group relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 rounded-2xl blur-sm opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+        <div className="relative bg-gray-900/80 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden aspect-video shadow-2xl">
+          <PipecatClientVideo
+            participant="bot"
+            fit="cover"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+          <div className="absolute bottom-4 left-4">
+            <div className="flex items-center gap-2 bg-black/50 backdrop-blur-md border border-white/20 px-3 py-2 rounded-full">
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+              <span className="text-white text-sm font-medium">AI Assistant</span>
+            </div>
+          </div>
+          <div className="absolute top-4 right-4">
+            <div className="w-8 h-8 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center">
+              <Bot size={16} className="text-blue-400" />
+            </div>
+          </div>
+          <div className="absolute top-4 left-4">
+            <Sparkles size={20} className="text-purple-400 animate-pulse" />
+          </div>
         </div>
       </div>
     </div>
@@ -112,64 +140,79 @@ const ControlPanel: React.FC = () => {
   }, [enableMic, isMicEnabled]);
 
   return (
-    <div className="flex justify-center gap-4 mb-6">
-      {/* Camera Toggle */}
-      <button
-        onClick={toggleCamera}
-        className={`p-3 rounded-full transition-colors ${
-          isCamEnabled 
-            ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-            : 'bg-gray-600 hover:bg-gray-700 text-gray-300'
-        }`}
-        disabled={!isConnected}
-        title={isCamEnabled ? 'Turn off camera' : 'Turn on camera'}
-      >
-        {isCamEnabled ? <Video size={20} /> : <VideoOff size={20} />}
-      </button>
-
-      {/* Microphone Toggle */}
-      <button
-        onClick={toggleMicrophone}
-        className={`p-3 rounded-full transition-colors ${
-          isMicEnabled 
-            ? 'bg-green-600 hover:bg-green-700 text-white' 
-            : 'bg-red-600 hover:bg-red-700 text-white'
-        }`}
-        disabled={!isConnected}
-        title={isMicEnabled ? 'Mute microphone' : 'Unmute microphone'}
-      >
-        {isMicEnabled ? <Mic size={20} /> : <MicOff size={20} />}
-      </button>
-
-      {/* Connect/Disconnect Button */}
-      <button
-        onClick={handleConnect}
-        disabled={isConnecting}
-        className={`px-6 py-3 rounded-full font-medium transition-colors ${
-          isConnected
-            ? 'bg-red-600 hover:bg-red-700 text-white'
-            : 'bg-green-600 hover:bg-green-700 text-white'
-        } ${isConnecting ? 'opacity-50 cursor-not-allowed' : ''}`}
-      >
-        <div className="flex items-center gap-2">
-          {isConnecting ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              Connecting...
-            </>
-          ) : isConnected ? (
-            <>
-              <PhoneOff size={20} />
-              Disconnect
-            </>
-          ) : (
-            <>
-              <Phone size={20} />
-              Connect
-            </>
+    <div className="flex justify-center items-center gap-4 mb-8">
+      <div className="flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-2 shadow-2xl">
+        {/* Camera Toggle */}
+        <button
+          onClick={toggleCamera}
+          className={`relative group p-4 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+            isCamEnabled 
+              ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25' 
+              : 'bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 border border-gray-600/50'
+          }`}
+          disabled={!isConnected}
+          title={isCamEnabled ? 'Turn off camera' : 'Turn on camera'}
+        >
+          {isCamEnabled && (
+            <div className="absolute inset-0 bg-blue-500 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
           )}
-        </div>
-      </button>
+          <div className="relative">
+            {isCamEnabled ? <Video size={20} /> : <VideoOff size={20} />}
+          </div>
+        </button>
+
+        {/* Microphone Toggle */}
+        <button
+          onClick={toggleMicrophone}
+          className={`relative group p-4 rounded-xl transition-all duration-300 transform hover:scale-105 ${
+            isMicEnabled 
+              ? 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/25' 
+              : 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25'
+          }`}
+          disabled={!isConnected}
+          title={isMicEnabled ? 'Mute microphone' : 'Unmute microphone'}
+        >
+          {isMicEnabled && (
+            <div className="absolute inset-0 bg-green-500 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity animate-pulse"></div>
+          )}
+          <div className="relative">
+            {isMicEnabled ? <Mic size={20} /> : <MicOff size={20} />}
+          </div>
+        </button>
+
+        {/* Connect/Disconnect Button */}
+        <button
+          onClick={handleConnect}
+          disabled={isConnecting}
+          className={`relative group px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+            isConnected
+              ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25'
+              : 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg shadow-green-500/25'
+          } ${isConnecting ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          <div className={`absolute inset-0 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity ${
+            isConnected ? 'bg-red-500' : 'bg-green-500'
+          }`}></div>
+          <div className="relative flex items-center gap-3">
+            {isConnecting ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                <span>Connecting...</span>
+              </>
+            ) : isConnected ? (
+              <>
+                <PhoneOff size={20} />
+                <span>Disconnect</span>
+              </>
+            ) : (
+              <>
+                <Phone size={20} />
+                <span>Connect</span>
+              </>
+            )}
+          </div>
+        </button>
+      </div>
     </div>
   );
 };
@@ -268,71 +311,98 @@ const ChatInterface: React.FC = () => {
   }, [handleSendMessage]);
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4 h-96 flex flex-col">
-      <h3 className="text-lg font-semibold text-white mb-4">Chat</h3>
-      
-      {/* Messages Container */}
-      <div 
-        ref={chatContainerRef}
-        className="flex-1 overflow-y-auto mb-4 space-y-3 chat-container"
-      >
-        {messages.length === 0 ? (
-          <div className="text-gray-400 text-center py-8">
-            {isConnected ? 'Start speaking or type a message...' : 'Connect to start chatting'}
+    <div className="relative">
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-3xl blur-xl"></div>
+      <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+            <Bot size={16} className="text-white" />
           </div>
-        ) : (
-          messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex items-start gap-3 ${
-                message.type === 'user' ? 'justify-end' : 'justify-start'
-              }`}
-            >
-              {message.type === 'bot' && (
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                  <Bot size={16} className="text-white" />
-                </div>
-              )}
-              
+          <h3 className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+            AI Chat
+          </h3>
+          {isConnected && (
+            <div className="flex items-center gap-2 ml-auto">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-green-400 text-sm font-medium">Live</span>
+            </div>
+          )}
+        </div>
+        
+        {/* Messages Container */}
+        <div 
+          ref={chatContainerRef}
+          className="h-80 overflow-y-auto mb-6 space-y-4 pr-2 custom-scrollbar"
+        >
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center py-8">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                <Sparkles size={24} className="text-white" />
+              </div>
+              <p className="text-gray-400 text-lg font-medium mb-2">
+                {isConnected ? 'Ready to chat!' : 'Connect to start'}
+              </p>
+              <p className="text-gray-500 text-sm">
+                {isConnected ? 'Start speaking or type a message below...' : 'Click the Connect button to begin your AI conversation'}
+              </p>
+            </div>
+          ) : (
+            messages.map((message) => (
               <div
-                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                  message.type === 'user'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-700 text-gray-100'
+                key={message.id}
+                className={`flex items-start gap-3 animate-fadeIn ${
+                  message.type === 'user' ? 'justify-end' : 'justify-start'
                 }`}
               >
-                <p className="text-sm">{message.text}</p>
-                <p className="text-xs opacity-70 mt-1">{message.timestamp}</p>
-              </div>
-
-              {message.type === 'user' && (
-                <div className="flex-shrink-0 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                  <User size={16} className="text-white" />
+                {message.type === 'bot' && (
+                  <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+                    <Bot size={14} className="text-white" />
+                  </div>
+                )}
+                
+                <div
+                  className={`group max-w-sm lg:max-w-md px-4 py-3 rounded-2xl backdrop-blur-sm transition-all duration-300 hover:scale-105 ${
+                    message.type === 'user'
+                      ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25'
+                      : 'bg-white/10 border border-white/20 text-gray-100 shadow-lg'
+                  }`}
+                >
+                  <p className="text-sm leading-relaxed">{message.text}</p>
+                  <p className="text-xs opacity-70 mt-2">{message.timestamp}</p>
                 </div>
-              )}
-            </div>
-          ))
-        )}
-      </div>
 
-      {/* Input Area */}
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder={isConnected ? "Type a message..." : "Connect to chat"}
-          disabled={!isConnected}
-          className="flex-1 bg-gray-700 text-white px-3 py-2 rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none disabled:opacity-50"
-        />
-        <button
-          onClick={handleSendMessage}
-          disabled={!inputText.trim() || !isConnected}
-          className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg transition-colors"
-        >
-          <Send size={16} />
-        </button>
+                {message.type === 'user' && (
+                  <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+                    <User size={14} className="text-white" />
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Input Area */}
+        <div className="relative">
+          <div className="flex gap-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-2">
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder={isConnected ? "Type your message..." : "Connect to start chatting"}
+              disabled={!isConnected}
+              className="flex-1 bg-transparent text-white placeholder-gray-400 px-4 py-3 focus:outline-none disabled:opacity-50"
+            />
+            <button
+              onClick={handleSendMessage}
+              disabled={!inputText.trim() || !isConnected}
+              className="group relative bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white p-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
+              <Send size={18} className="relative" />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -342,36 +412,51 @@ const ChatInterface: React.FC = () => {
 const ConnectionStatus: React.FC = () => {
   const transportState = usePipecatClientTransportState();
   
-  const getStatusColor = () => {
+  const getStatusConfig = () => {
     switch (transportState) {
       case 'connected':
-        return 'bg-green-500';
+        return {
+          color: 'from-green-400 to-emerald-500',
+          bgColor: 'from-green-500/20 to-emerald-500/20',
+          text: 'Connected',
+          icon: '●'
+        };
       case 'connecting':
-        return 'bg-yellow-500';
+        return {
+          color: 'from-yellow-400 to-orange-500',
+          bgColor: 'from-yellow-500/20 to-orange-500/20',
+          text: 'Connecting',
+          icon: '◐'
+        };
       case 'disconnected':
-        return 'bg-red-500';
+        return {
+          color: 'from-red-400 to-red-500',
+          bgColor: 'from-red-500/20 to-red-500/20',
+          text: 'Disconnected',
+          icon: '○'
+        };
       default:
-        return 'bg-gray-500';
+        return {
+          color: 'from-gray-400 to-gray-500',
+          bgColor: 'from-gray-500/20 to-gray-500/20',
+          text: 'Unknown',
+          icon: '?'
+        };
     }
   };
 
-  const getStatusText = () => {
-    switch (transportState) {
-      case 'connected':
-        return 'Connected';
-      case 'connecting':
-        return 'Connecting';
-      case 'disconnected':
-        return 'Disconnected';
-      default:
-        return 'Unknown';
-    }
-  };
+  const status = getStatusConfig();
 
   return (
-    <div className="flex items-center gap-2 mb-4">
-      <div className={`w-3 h-3 rounded-full ${getStatusColor()}`}></div>
-      <span className="text-sm text-gray-300">{getStatusText()}</span>
+    <div className="flex justify-center mb-8">
+      <div className={`flex items-center gap-3 bg-gradient-to-r ${status.bgColor} backdrop-blur-xl border border-white/20 rounded-full px-6 py-3 shadow-lg`}>
+        <div className={`w-3 h-3 bg-gradient-to-r ${status.color} rounded-full ${
+          transportState === 'connecting' ? 'animate-pulse' : ''
+        } ${transportState === 'connected' ? 'animate-pulse' : ''}`}></div>
+        <span className={`font-medium bg-gradient-to-r ${status.color} bg-clip-text text-transparent`}>
+          {status.text}
+        </span>
+      </div>
     </div>
   );
 };
@@ -379,9 +464,44 @@ const ConnectionStatus: React.FC = () => {
 // Main App Component with Provider
 const AppContent: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <h1 className="text-3xl font-bold text-center mb-8">Pipecat React UI</h1>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-purple-900/20 to-blue-900/20"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(120,119,198,0.3),transparent_50%)]"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.3),transparent_50%)]"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_40%_40%,rgba(120,219,255,0.2),transparent_50%)]"></div>
+      
+      {/* Floating Particles */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-white/20 rounded-full animate-float"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${3 + Math.random() * 4}s`
+            }}
+          ></div>
+        ))}
+      </div>
+
+      <div className="relative z-10 container mx-auto px-4 py-8 max-w-6xl">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+              <Sparkles size={20} className="text-white" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
+              Pipecat React UI
+            </h1>
+          </div>
+          <p className="text-gray-400 text-lg font-medium">
+            Next-generation AI voice and video interface
+          </p>
+        </div>
         
         <ConnectionStatus />
         <VideoPanel />
@@ -391,6 +511,57 @@ const AppContent: React.FC = () => {
         {/* Hidden audio element for bot audio */}
         <PipecatClientAudio />
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px) rotate(0deg);
+          }
+          33% {
+            transform: translateY(-10px) rotate(120deg);
+          }
+          66% {
+            transform: translateY(5px) rotate(240deg);
+          }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.5s ease-out;
+        }
+
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(to bottom, #8b5cf6, #ec4899);
+          border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(to bottom, #7c3aed, #db2777);
+        }
+      `}</style>
     </div>
   );
 };
