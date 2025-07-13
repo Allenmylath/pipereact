@@ -18,6 +18,7 @@
     "lucide-react": "latest"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
