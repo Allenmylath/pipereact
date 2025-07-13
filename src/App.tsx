@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { RTVIClient, RTVIEvent } from '@pipecat-ai/client-js';
+import { PipecatClient, RTVIEvent } from '@pipecat-ai/client-js';
 import { DailyTransport } from '@pipecat-ai/daily-transport';
 import {
-  RTVIClientProvider,
-  RTVIClientAudio,
-  RTVIClientVideo,
-  useRTVIClient,
-  useRTVIClientTransportState,
+  PipecatClientProvider,
+  PipecatClientAudio,
+  PipecatClientVideo,
+  usePipecatClient,
+  usePipecatClientTransportState,
   useRTVIClientEvent,
-  useRTVIClientCamControl,
-  useRTVIClientMicControl,
+  usePipecatClientCamControl,
+  usePipecatClientMicControl,
 } from '@pipecat-ai/client-react';
 import { 
   Video, 
@@ -32,13 +32,10 @@ interface ChatMessage {
 }
 
 // Create the client instance outside the component to prevent recreation
-const client = new RTVIClient({
+const client = new PipecatClient({
   transport: new DailyTransport(),
   enableMic: true,
   enableCam: true,
-  params: {
-    baseUrl: import.meta.env.VITE_PIPECAT_API_URL || '/api',
-  },
 });
 
 // Video Panel Component
@@ -47,7 +44,7 @@ const VideoPanel: React.FC = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       {/* Local Video */}
       <div className="relative bg-gray-800 rounded-lg overflow-hidden aspect-video">
-        <RTVIClientVideo
+        <PipecatClientVideo
           participant="local"
           fit="cover"
           mirror={true}
@@ -60,7 +57,7 @@ const VideoPanel: React.FC = () => {
       
       {/* Bot Video */}
       <div className="relative bg-gray-800 rounded-lg overflow-hidden aspect-video">
-        <RTVIClientVideo
+        <PipecatClientVideo
           participant="bot"
           fit="cover"
           className="w-full h-full object-cover"
@@ -75,30 +72,32 @@ const VideoPanel: React.FC = () => {
 
 // Control Panel Component
 const ControlPanel: React.FC = () => {
-  const rtviClient = useRTVIClient();
-  const transportState = useRTVIClientTransportState();
-  const { enableCam, isCamEnabled } = useRTVIClientCamControl();
-  const { enableMic, isMicEnabled } = useRTVIClientMicControl();
+  const pcClient = usePipecatClient();
+  const transportState = usePipecatClientTransportState();
+  const { enableCam, isCamEnabled } = usePipecatClientCamControl();
+  const { enableMic, isMicEnabled } = usePipecatClientMicControl();
   
   const [isConnecting, setIsConnecting] = useState(false);
   const isConnected = transportState === 'connected';
 
   const handleConnect = useCallback(async () => {
-    if (!rtviClient) return;
+    if (!pcClient) return;
     
     if (isConnected) {
-      await rtviClient.disconnect();
+      await pcClient.disconnect();
     } else {
       setIsConnecting(true);
       try {
-        await rtviClient.connect();
+        await pcClient.connect({
+          endpoint: `${import.meta.env.VITE_PIPECAT_API_URL || '/api'}/connect`,
+        });
       } catch (error) {
         console.error('Failed to connect:', error);
       } finally {
         setIsConnecting(false);
       }
     }
-  }, [rtviClient, isConnected]);
+  }, [pcClient, isConnected]);
 
   const toggleCamera = useCallback(() => {
     if (enableCam) {
@@ -180,8 +179,8 @@ const ChatInterface: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState('');
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const rtviClient = useRTVIClient();
-  const transportState = useRTVIClientTransportState();
+  const pcClient = usePipecatClient();
+  const transportState = usePipecatClientTransportState();
 
   const isConnected = transportState === 'connected';
 
@@ -238,7 +237,7 @@ const ChatInterface: React.FC = () => {
 
   // Handle manual text input
   const handleSendMessage = useCallback(async () => {
-    if (!inputText.trim() || !isConnected || !rtviClient) return;
+    if (!inputText.trim() || !isConnected || !pcClient) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -249,21 +248,17 @@ const ChatInterface: React.FC = () => {
 
     setMessages(prev => [...prev, userMessage]);
     
-    // Send message to bot using action
+    // Send message to bot - this will depend on your specific backend implementation
     try {
-      await rtviClient.action({
-        service: 'llm',
-        action: 'say',
-        arguments: [
-          { name: 'text', value: inputText }
-        ]
-      });
+      // Example action call - adjust based on your backend
+      console.log('Sending message:', inputText);
+      // You might need to implement a specific method for sending text messages
     } catch (error) {
       console.error('Failed to send message:', error);
     }
 
     setInputText('');
-  }, [inputText, isConnected, rtviClient]);
+  }, [inputText, isConnected, pcClient]);
 
   const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -345,7 +340,7 @@ const ChatInterface: React.FC = () => {
 
 // Connection Status Component
 const ConnectionStatus: React.FC = () => {
-  const transportState = useRTVIClientTransportState();
+  const transportState = usePipecatClientTransportState();
   
   const getStatusColor = () => {
     switch (transportState) {
@@ -394,7 +389,7 @@ const AppContent: React.FC = () => {
         <ChatInterface />
         
         {/* Hidden audio element for bot audio */}
-        <RTVIClientAudio />
+        <PipecatClientAudio />
       </div>
     </div>
   );
@@ -403,9 +398,9 @@ const AppContent: React.FC = () => {
 // Root App Component
 const App: React.FC = () => {
   return (
-    <RTVIClientProvider client={client}>
+    <PipecatClientProvider client={client}>
       <AppContent />
-    </RTVIClientProvider>
+    </PipecatClientProvider>
   );
 };
 
