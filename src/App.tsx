@@ -466,10 +466,10 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Animated Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-gray-900 via-purple-900/20 to-blue-900/20"></div>
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(120,119,198,0.3),transparent_50%)]"></div>
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(255,119,198,0.3),transparent_50%)]"></div>
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_40%_40%,rgba(120,219,255,0.2),transparent_50%)]"></div>
+      <div className="fixed inset-0 bg-gradient-to-br from-slate-800 via-purple-800/40 to-blue-800/40"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(139,92,246,0.4),transparent_60%)]"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.4),transparent_60%)]"></div>
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_40%_40%,rgba(59,130,246,0.3),transparent_60%)]"></div>
       
       {/* Floating Particles */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
