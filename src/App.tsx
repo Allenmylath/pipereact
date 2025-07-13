@@ -512,56 +512,7 @@ const AppContent: React.FC = () => {
         <PipecatClientAudio />
       </div>
 
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
 
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          33% {
-            transform: translateY(-10px) rotate(120deg);
-          }
-          66% {
-            transform: translateY(5px) rotate(240deg);
-          }
-        }
-
-        .animate-fadeIn {
-          animation: fadeIn 0.5s ease-out;
-        }
-
-        .animate-float {
-          animation: float 3s ease-in-out infinite;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 6px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 3px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #8b5cf6, #ec4899);
-          border-radius: 3px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #7c3aed, #db2777);
-        }
-      `}</style>
     </div>
   );
 };
